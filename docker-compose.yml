@@ -1,0 +1,124 @@
+# docker-compose.deploy.yml
+version: '3.8'
+
+volumes:
+  userdb_vol:
+  productdb_vol:
+  orderdb_vol:
+
+networks:
+  micro_network:
+#    external:
+    name: micro_network
+
+services:
+  user-api:
+    container_name: cuser-service
+    build:
+      context: user-service
+    ports:
+    - "5001:5001"
+    depends_on:
+      - user-db
+#    entrypoint: flask db init
+    networks:
+      - micro_network
+    restart: always
+
+  user-db:
+    container_name: cuser_dbase
+    image: mysql:8
+    ports:
+    - "32000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: pfm_dc_2020
+      MYSQL_DATABASE: user
+      MYSQL_USER: cloudacademy
+      MYSQL_PASSWORD: pfm_2020
+    networks:
+      - micro_network
+    volumes:
+    - userdb_vol:/var/lib/mysql
+
+  product-api:
+    container_name: cproduct-service
+    build:
+      context: product-service
+    ports:
+    - "5002:5002"
+    depends_on:
+      - product-db
+#    entrypoint: flask db init
+#    command: "flask db init && flask db migrate && flask db upgrade"
+    networks:
+      - micro_network
+    restart: always
+
+  product-db:
+    container_name: cproduct_dbase
+    image: mysql:8
+    ports:
+    - "32001:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: pfm_dc_2020
+      MYSQL_DATABASE: product
+      MYSQL_USER: cloudacademy
+      MYSQL_PASSWORD: pfm_2020
+    networks:
+      - micro_network
+    volumes:
+    - productdb_vol:/var/lib/mysql
+
+  order-api:
+    container_name: corder-service
+    build:
+      context: order-service
+    ports:
+    - "5003:5003"
+#    entrypoint: flask db init
+#    command: "flask db init && flask db migrate && flask db upgrade"
+    depends_on:
+      - order-db
+    networks:
+      - micro_network
+    restart: always
+
+  order-db:
+    container_name: corder_dbase
+    image: mysql:8
+    ports:
+    - "32002:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: pfm_dc_2020
+      MYSQL_DATABASE: order
+      MYSQL_USER: cloudacademy
+      MYSQL_PASSWORD: pfm_2020
+    networks:
+      - micro_network
+    volumes:
+    - orderdb_vol:/var/lib/mysql
+
+  frontend-app:
+    container_name: cfrontend-app
+    build:
+      context: frontend
+    ports:
+    - "5000:5000"
+    networks:
+      - micro_network
+    restart: always
+
+  datadog:
+    container_name: datadog-agent
+    image: datadog/agent:latest
+    links:
+      - demo-server
+    environment:
+      - DD_API_KEY=${KEY}
+#      - DD_SITE="datadoghq.com"
+    networks:
+      - micro_network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro

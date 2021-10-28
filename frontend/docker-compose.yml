@@ -3,8 +3,7 @@ version: '3.8'
 
 networks:
   micro_network:
-    external:
-      name: micro_network
+    name: micro_network
 
 services:
   frontend-app:

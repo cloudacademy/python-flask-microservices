@@ -1,0 +1,54 @@
+pipeline {
+   agent any
+    environment {
+        //once you sign up for Docker hub, use that user_id here
+        registry = "ajitha1234/frontend"
+        //- update your credentials ID after creating credentials for connecting to Docker Hub
+        registryCredential = 'd425a730-28cb-4552-8505-9ed3beb008d5'
+        dockerImage = ''
+    }
+
+   stages {
+        stage('build') {
+            steps {
+                 checkout([$class: 'GitSCM', branches: [[name: '*/JenkinsFile']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/vinay-sj/python-flask-microservices.git']]])
+                 
+             }
+       }
+       
+        // Building Docker images
+    stage('Building image') {
+     steps {
+              echo "Working"
+                 
+             }
+    }
+    
+     // Uploading Docker images into Docker Hub
+    stage('Upload Image') {
+    steps {
+              echo "Working"
+                 
+             }
+    }
+    
+     // Stopping Docker containers for cleaner Docker run
+     stage('docker stop container') {
+      steps {
+              echo "Working"
+                 
+             }
+       }
+    
+    
+    // Running Docker container, make sure port 8096 is opened in 
+    stage('Docker Run') {
+  steps {
+              echo "Working"
+                 
+             }
+    }
+
+   }
+
+}
