@@ -40,7 +40,7 @@ docker images
 ### Step 4.
 Launch the microservice environment:
 ```
-docker-compose -f docker-compose.deploy.yml up
+docker-compose -f docker-compose.deploy.yml -d up
 docker ps -a
 ```
 
