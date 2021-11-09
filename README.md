@@ -24,27 +24,27 @@ cd frontend
 ls -la
 ```
 
-### Step 1.
+### Step 2.
 Create a new Docker network and name it ```micro_network```:
 ```
 docker network create micro_network
 ```
 
-### Step 2.
+### Step 3.
 Build each of the microservice Docker container images:
 ```
 docker-compose -f docker-compose.deploy.yml build
 docker images
 ```
 
-### Step 3.
+### Step 4.
 Launch the microservice environment:
 ```
-docker-compose -f docker-compose.deploy.yml build
+docker-compose -f docker-compose.deploy.yml up
 docker ps -a
 ```
 
-### Step 4.
+### Step 5.
 Prepare each microservice mysql database:
 ```
 for service in corder-service cproduct-service cuser-service;
@@ -55,20 +55,20 @@ do
 done
 ```
 
-### Step 5.
+### Step 6.
 Populate the product database:
 ```
 curl -i -d "name=prod1&slug=prod1&image=product1.jpg&price=100" -X POST localhost:5002/api/product/create
 curl -i -d "name=prod2&slug=prod2&image=product2.jpg&price=200" -X POST localhost:5002/api/product/create
 ```
 
-### Step 6.
+### Step 7.
 Using your workstations browser - navigate to the following URL and register:
 ```
 http://localhost:5000/register
 ```
 
-### Step 7.
+### Step 8.
 Back within your terminal, use a mysql client to confirm that a new user registration record was created:
 ```
 mysql --host=127.0.0.1 --port=32000 --user=cloudacademy --password=pfm_2020
@@ -79,13 +79,13 @@ mysql> select * from user;
 mysql> exit
 ```
 
-### Step 8.
+### Step 9.
 Using your workstations browser - login, and add products into your cart, and then finally click the checkout option
 ```
 http://localhost:5000/login
 ```
 
-### Step 9.
+### Step 10.
 Back within your terminal, use a mysql client to confirm that a new order has been created:
 ```
 mysql --host=127.0.0.1 --port=32002 --user=cloudacademy --password=pfm_2020
